@@ -1,25 +1,48 @@
-//
-//  ViewController.swift
-//  Aula_003_AppCam
-//
-//  Created by Swift on 18/01/17.
-//  Copyright © 2017 Swift. All rights reserved.
-//
-
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
+    //MARK: OUTLETS
+    @IBOutlet weak var minhaImageView: UIImageView!
+    
+    //MARK: PROPRIEDADES
+    let minhaImagePicker = UIImagePickerController()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-    }
+        
+        minhaImagePicker.delegate = self
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
-
+    //MARK: ACTION
+    @IBAction func acessar(_ sender: UIButton) {
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera) {
+            minhaImagePicker.sourceType = UIImagePickerControllerSourceType.camera
+            present(minhaImagePicker, animated: true)
+        } else {
+            let alerta = UIAlertController(title: "Erro", message: "Voce não possui camera disponivel", preferredStyle: UIAlertControllerStyle.alert)
+            let acao = UIAlertAction(title: "OK", style: UIAlertActionStyle.default)
+            alerta.addAction(acao)
+            present(alerta, animated: true)
+        }
+        
+    }
+    
+    //MARK: PICKER DELEGATE
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        let alerta = UIAlertController(title: "Erro", message: "Cancelou a Foto", preferredStyle: UIAlertControllerStyle.alert)
+        let acao = UIAlertAction(title: "OK", style: UIAlertActionStyle.default)
+        alerta.addAction(acao)
+        present(alerta, animated: true)
+        picker.dismiss(animated: true)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        let imagemEscolhida = info[UIImagePickerControllerOriginalImage] as! UIImage
+        minhaImageView.image = imagemEscolhida
+        picker.dismiss(animated: true)
+        
+    }
 
 }
 
